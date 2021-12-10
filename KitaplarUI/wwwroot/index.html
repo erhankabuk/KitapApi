@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Kitaplar App</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+
+
+    <div class="container">
+        <h1 class="mt-2">Kitaplar</h1>
+        <div>
+            <div class="mb-3">
+                <label class="form-label">Kitap Adı</label>
+                <input type="text" class="form-control" id="kitapAdi" placeholder="Kitap adını giriniz.">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Yazar Adı</label>
+                <input type="text" class="form-control" id="yazarAdi" placeholder="Yazar adını giriniz.">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Kitap Yılı</label>
+                <input type="number" class="form-control" id="kitapYili" placeholder="Kitap yılını giriniz.">
+            </div>
+            <button class="btn btn-primary" onclick="PostKitap()" type="button">Kaydet</button>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Kitap Id</th>
+                    <th scope="col">Kitap Adı</th>
+                    <th scope="col">Kitap Yıl</th>
+                    <th scope="col">Kitap Yazar</th>
+                </tr>
+            </thead>
+            <tbody id="kitaplar"></tbody>
+        </table>
+    </div>
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+    <script>
+        function GetKitaps() {
+            $("#kitaplar").html("");
+            $.ajax({
+                type: "GET",
+                url: "https://localhost:44360/api/Kitaplar",
+                success: function (data) {
+                    $.each(data, function (index, element) {
+                        $("#kitaplar").append(`
+                                    <tr>
+                                        <th scope="row">${element.id}</th>
+                                        <td>${element.ad}</td>
+                                        <td>${element.yil}</td>
+                                        <td>${element.yazar}</td>
+                                    </tr>`);
+                    })
+                }
+            })
+        }
+
+        function PostKitap() {
+            var kitapAdi = document.getElementById("kitapAdi").value;
+            var yazarAdi = document.getElementById("yazarAdi").value;
+            var kitapYili = parseInt(document.getElementById("kitapYili").value);
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "https://localhost:44360/api/Kitaplar",
+                data: JSON.stringify({
+                    "id": 0,
+                    "ad": kitapAdi,
+                    "yil": kitapYili,
+                    "yazar": yazarAdi
+                }),
+                success: function (data) {
+                    GetKitaps();
+                }
+            });
+        }
+        GetKitaps();
+    </script>
+</body>
+</html>
